@@ -51,10 +51,11 @@ public class RecyclerAdapter  extends RecyclerView.Adapter<RecyclerAdapter.ViewH
         return deviceList.size();
     }
     public void addDevice(String name,String mac)
-    {
+    {  if(!deviceMacList.contains(mac)) {
         deviceList.add(name);
         deviceMacList.add(mac);
         notifyDataSetChanged();
+    }
     }
     public void addDeviceList(ArrayList<String> name,ArrayList<String> mac)
     {

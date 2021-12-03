@@ -8,12 +8,13 @@ public class DeviceModel {
 
     // below line is to auto increment
     // id for each course.
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     // below line is a variable
     // for course name.
-    private String DeviveName;
+    private String DeviceName;
 
     // below line is use for
     // course description.
@@ -28,12 +29,12 @@ public class DeviceModel {
         this.id = id;
     }
 
-    public String getDeviveName() {
-        return DeviveName;
+    public String getDeviceName() {
+        return DeviceName;
     }
 
-    public void setDeviveName(String deviveName) {
-        DeviveName = deviveName;
+    public void setDeviceName(String deviveName) {
+        DeviceName = deviveName;
     }
 
     public String getMacAddress() {

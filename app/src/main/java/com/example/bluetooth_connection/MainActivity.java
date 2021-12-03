@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +33,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.bluetooth_connection.room.DeviceModel;
+import com.example.bluetooth_connection.room.ViewModal;
 
 import org.w3c.dom.Text;
 
@@ -59,10 +64,14 @@ public class MainActivity extends AppCompatActivity {
     private final int DISCONNECTING=4;
     private final int DISCONNECTING_FAILED=5;
     private final int DISCONNECTING_SUCCESSFULLY=6;
-    @Override
+    private ViewModal viewModal;
+    BluetoothDevice curr=null;
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+         viewModal = ViewModelProviders.of(this).get(ViewModal.class);
         IntentFilter intent = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         registerReceiver(mPairReceiver, intent);
         IntentFilter filter3 = new IntentFilter();
@@ -109,20 +118,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-       /* Handler handler= new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(@NonNull Message message) {
-
-                switch (message.what)
-                {
-                    case  1:status.setText("coneecting");
-                    case  2:status.setText("coneectect Successfully");
-                    case  3:status.setText("coneecting failed");
-                    case  4:status.setText("Disconeecting succesfully ");
-                }
-                return false;
-            }
-        });*/
+      history.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              Intent intent=new Intent(MainActivity.this,HistoryActivity.class);
+              startActivity(intent);
+          }
+      });
 
      acceptThread=new AcceptThread();
     acceptThread.start();
@@ -393,11 +395,23 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             switch (action){
-                case BluetoothDevice.ACTION_ACL_CONNECTED:
-                   status.setText("Cconnected Successfully");
+                case BluetoothDevice.ACTION_ACL_CONNECTED: {
+
+                    BluetoothDevice device = intent
+                            .getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    DeviceModel deviceModel=new DeviceModel();
+                    deviceModel.setDeviceName(device.getName());
+                    deviceModel.setMacAddress(device.getAddress());
+                    deviceModel.setTimeStamp(System.currentTimeMillis());
+                    status.setText("Cconnected Successfully to" +device.getName() +" "+device.getAddress());
+                   
+                    viewModal.insert(deviceModel);
+                }
                     break;
-                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED: {
                     status.setText("Disconnected Successfully");
+
+                }
                     break;
             }
         }
@@ -409,7 +423,10 @@ public class MainActivity extends AppCompatActivity {
             switch (message.what)
             {
                 case  CONNECTING :status.setText("connecting");break;
-                case  CONNECTING_SUCCESSFULLY:status.setText("connectect Successfully");break;
+                case  CONNECTING_SUCCESSFULLY: {
+                    status.setText("connectect Successfully");
+                    break;
+                }
                 case  CONNECTING_FAILED:status.setText("connecting failed");break;
                 case  DISCONNECTING :status.setText("Disconnecting");break;
                 case  DISCONNECTING_SUCCESSFULLY:status.setText("Disconnectect Successfully");break;
