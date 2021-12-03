@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                     deviceModel.setMacAddress(device.getAddress());
                     deviceModel.setTimeStamp(System.currentTimeMillis());
                     status.setText("Cconnected Successfully to" +device.getName() +" "+device.getAddress());
-                   
+
                     viewModal.insert(deviceModel);
                 }
                     break;
@@ -424,12 +424,12 @@ public class MainActivity extends AppCompatActivity {
             {
                 case  CONNECTING :status.setText("connecting");break;
                 case  CONNECTING_SUCCESSFULLY: {
-                    status.setText("connectect Successfully");
+                   // status.setText("connectect Successfully");
                     break;
                 }
                 case  CONNECTING_FAILED:status.setText("connecting failed");break;
                 case  DISCONNECTING :status.setText("Disconnecting");break;
-                case  DISCONNECTING_SUCCESSFULLY:status.setText("Disconnectect Successfully");break;
+                case  DISCONNECTING_SUCCESSFULLY:/*tatus.setText("Disconnectect Successfully")*/;break;
                 case  DISCONNECTING_FAILED:status.setText("Disconnecting failed");break;
                 default:status.setText("No device Connected");break;
             }
